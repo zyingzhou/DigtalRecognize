@@ -11,7 +11,7 @@ from torchvision import transforms
 
 
 class CustomImageDataset(Dataset):
-    def __init__(self, data_dir, label_path, transform=None, target_transform=transforms.ToTensor):
+    def __init__(self, data_dir, label_path, transform=None, target_transform=None):
         self.data_list = []
         with open(label_path, encoding='utf-8') as f:
             for line in f.readlines():
@@ -28,7 +28,9 @@ class CustomImageDataset(Dataset):
     def __getitem__(self, idx):
         image_path, label = self.data_list[idx]
         image = read_image(image_path)
+        image = torch.tensor(image, dtype=torch.float32)
         label = int(label)
+        label = torch.tensor(label, dtype=torch.float32)
         if self.transform:
             image = self.transform()
         if self.target_transform:
